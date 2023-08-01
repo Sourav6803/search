@@ -88,3 +88,12 @@ col{
     margin: 3px;
 }
 
+.radioBtn input{
+    width: fit-content;
+    font-size: 40px;
+    margin-right: 5px;
+}
+
+input{
+    color: rgb(16, 18, 18);
+}
