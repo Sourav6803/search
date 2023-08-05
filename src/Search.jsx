@@ -1,11 +1,6 @@
 import "./Search.css"
 import { BiSearch } from 'react-icons/bi'
 import logo from "./export.jpg"
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-
 import React, { useEffect, useRef, useState } from 'react'
 import UserData from "./UserData"
 
