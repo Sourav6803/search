@@ -168,16 +168,6 @@ const Search = () => {
           
 
 
-          {/* <BootstrapTable
-            bootstrap4
-            keyField="Bill_of_Entry_Date"
-            columns={columns}
-            data={data}
-            // pagination={pagination}
-          /> */}
-
-          {/* <Table /> */}
-
           <nav className="d-flex justify-content-end">
             <ul className="pagination">
               <li className="page-item">
