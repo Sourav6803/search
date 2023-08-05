@@ -1,54 +1,84 @@
 import "./Search.css"
 import { BiSearch } from 'react-icons/bi'
 import logo from "./export.jpg"
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 
 import React, { useEffect, useRef, useState } from 'react'
 import UserData from "./UserData"
+
 
 
 const Search = () => {
   const [data, setData] = useState([])
   const [filter, setFilter] = useState("")
   const [ivalue, setValue] = useState("")
+  const [currentPage , setCurrentPage] = useState(1)
+  const [limit, setLimit] = useState(5)
   const type = useRef()
+
+  const recordPerPage = 20;
+  const lastIndex = currentPage * recordPerPage
+  const firstindex = lastIndex - recordPerPage
+  const records = data.slice(firstindex, lastIndex)
+  const npages = Math.ceil(data.length / recordPerPage)
+  const numbers = [...Array(npages+1).keys()].slice(1)
+
+
+  
+
+  // const pagination = paginationFactory({
+  //   page: 1,
+  //   sizePerPage: 10,
+  //   lastPageText: ">>",
+  //   firstPageText: "<<",
+  //   nextPageText: ">",
+  //   prePageText: "<",
+  //   showTotal: true,
+  //   alwaysShowAllBtns: true,
+  //   onPageChange: function (page, sizePerPage) {
+      
+  //   },
+  //   onSizePerPageChange: function (page, sizePerPage) {
+  //     console.log("page", page)
+  //     console.log("sizeperpage", sizePerPage)
+  //   }
+
+  // })
 
 
   useEffect(() => {
-
-    filter && fetch(`http://localhost:9900/filterImportData?${ivalue}=${filter}`)
+    filter && fetch(`https://iiwqh7z69h.execute-api.ap-south-1.amazonaws.com/filterImportData?${ivalue}=${filter}`)
       .then(res => res.json())
       .then(da => {
-        console.log(da.responce)
+
         setData(da.responce)
       })
       .catch(err => console.log(err))
-  }, [filter])
+  }, [filter , currentPage])
+
+  function prePage(){
+    if (currentPage !== 1){
+      setCurrentPage(currentPage-1)
+    }
+  }
+
+  function nextPage(){
+    if(currentPage !== npages){
+      setCurrentPage(currentPage+1)
+    }
+  }
+
+  function changeCPage(id){
+    setCurrentPage(id)
+  }
 
 
   return (
 
     <>
-
-      {/* <nav className="container-fluid navbar-expand-lg navbar-light m-3" style={{ backgroundColor: "", height: "60px" }}>
-
-
-        <div className="d-flex  justify-content-end align-items-center " >
-          <ul className=" ">
-            <li className="active ">
-              <a className="nav-link" href="#">Import Export Data <span className="sr-only"></span></a>
-            </li>
-            <li className="">
-              <a className="nav-link" href="#">Contact Us</a>
-            </li>
-            <li className="">
-              <a className="nav-link" href="#">Login</a>
-            </li>
-
-          </ul>
-        </div>
-      </nav> */}
-
-
 
 
       <div className="search_div " style={{ height: "35vh", backgroundImage: `url(${logo})` }}>
@@ -56,10 +86,10 @@ const Search = () => {
           <h1 className="d-flex align-items-center justify-content-center  text-white" >Search Import Export Data Of India</h1>
         </div>
         <div className="radioBtn d-flex align-items-center justify-content-center ">
-           
-            <input className=" fs-1 text-white " type="radio" value="HSN_Code" name="data" onChange={e => setValue(e.target.value)} />HSN_Code
-            <input className="fs-1 text-white"  type="radio" value="Supplier_Name" name="data" onChange={e => setValue(e.target.value)} />Supplier_Name
-          
+
+          <input className=" fs-1 text-white " type="radio" value="HSN_Code" name="data" onChange={e => setValue(e.target.value)} />HSN_Code
+          <input className="fs-1 text-white" type="radio" value="Supplier_Name" name="data" onChange={e => setValue(e.target.value)} />Supplier_Name
+
         </div>
         <div className='search'>
           {/* <select className="bg-warning text-white text-bold m-0 p-0" style={{ height: "8vh", width: "6vw", borderRadius: "10px" }} ref={type}>
@@ -135,10 +165,44 @@ const Search = () => {
 
 
             <tbody>
-              <UserData data={data} />
+              <UserData data={records} />
             </tbody>
 
           </table>
+
+          
+
+
+          {/* <BootstrapTable
+            bootstrap4
+            keyField="Bill_of_Entry_Date"
+            columns={columns}
+            data={data}
+            // pagination={pagination}
+          /> */}
+
+          {/* <Table /> */}
+
+          <nav className="d-flex justify-content-end">
+            <ul className="pagination">
+              <li className="page-item">
+                <a href="#" className="page-link" onClick={prePage}>Prev</a>
+              </li>
+              {
+                numbers.map((n,i)=>(
+                  <li className={`page-item ${currentPage === n ? "active" : ''}`} key={i}>
+                    <a href="#" className="page-link" onClick={()=>changeCPage(n)}>{n}</a>
+                  </li>
+                ))
+              }
+
+              <li className="page-item">
+                <a href="#" className="page-link" onClick={nextPage}>Next</a>
+              </li>
+
+            </ul>
+          </nav>
+
         </div>
       }
 
